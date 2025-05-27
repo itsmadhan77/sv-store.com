@@ -1,0 +1,9 @@
+{% extends 'store/base.html' %}
+{% block content %}
+<h1>User Dashboard</h1>
+<ul>
+    <li><a href="{% url 'store:user_inventory' %}">View Inventory</a></li>
+    <li><a href="{% url 'store:user_orders' %}">My Orders & Status</a></li>
+    <!-- Add other user dashboard links here -->
+</ul>
+{% endblock %}

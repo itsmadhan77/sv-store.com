@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All User Orders</title>
+</head>
+<body>
+    <h2>All User Orders</h2>
+    <table border="1">
+        <tr>
+            <th>User</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Status</th>
+        </tr>
+        {% if orders %}
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.user.username }}</td>
+                <td>
+                    <ul>
+                    {% for item in order.items.all %}
+                        <li>{{ item.product.name }} x {{ item.quantity }}</li>
+                    {% endfor %}
+                    </ul>
+                </td>
+                <td>{{ order.status }}</td>
+                <td>
+                    <form method="post" action="{% url 'store:update_order_status' order.id %}">
+                        {% csrf_token %}
+                        <select name="status">
+                            <option value="Pending" {% if order.status == "Pending" %}selected{% endif %}>Pending</option>
+                            <option value="Shipped" {% if order.status == "Shipped" %}selected{% endif %}>Shipped</option>
+                            <option value="Delivered" {% if order.status == "Delivered" %}selected{% endif %}>Delivered</option>
+                        </select>
+                        <button type="submit">Update</button>
+                    </form>
+                    {% if updated_order_id == order.id %}
+                        <div style="color: green; font-size: 12px;">updated</div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="5">No orders found.</td>
+            </tr>
+        {% endif %}
+    </table>
+</body>
+</html>

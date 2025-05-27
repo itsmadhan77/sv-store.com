@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory</title>
+    <link rel="stylesheet" href="{% static 'store/style.css' %}">
+</head>
+<body>
+    {% include 'store/base.html' %}
+    <div class="container">
+        <h1>Inventory</h1>
+        {# Only show Add Product for admin, not for users #}
+        {% if request.session.admin_credentials %}
+            <a href="{% url 'store:add_product' %}" class="btn">Add Product</a>
+        {% endif %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    {% if not request.session.admin_credentials %}
+                        <th>Action</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in inventory %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>₹{{ item.price }}</td>
+                    <td>{{ item.stock }}</td>
+                    {% if not request.session.admin_credentials %}
+                    <td>
+                        <form action="{% url 'store:add_to_cart' item.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn">Add to Cart</button>
+                        </form>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="{% if not request.session.admin_credentials %}5{% else %}4{% endif %}">No items in inventory.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

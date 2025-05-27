@@ -1,0 +1,93 @@
+{% extends 'store/base.html' %}
+{% block content %}
+
+{% if messages %}
+  {% for message in messages %}
+    <div style="background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<h1>Payment</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Description</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart_items %}
+        <tr>
+           <td>{{ item.product.name }}</td>
+           <td>{{ item.product.description }}</td>
+           <td>₹{{ item.product.price }} x {{ item.quantity }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">No products in cart.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p>Total: ₹{{ total_price }}</p>
+
+<form method="post" action="{% url 'store:place_order' %}">
+    {% csrf_token %}
+    <label>
+        <input type="radio" name="payment_method" value="cod" required>
+        Cash on Delivery
+    </label>
+    <label>
+        <input type="radio" name="payment_method" value="card" required>
+        Card Payment
+    </label>
+    <div id="cardFields" style="display:none; margin-top:10px;">
+        <label>Card Number: <input type="text" name="card_number"></label><br>
+        <label>Name on Card: <input type="text" name="card_name"></label><br>
+        <label>Expiry: <input type="text" name="card_expiry" placeholder="MM/YY"></label><br>
+        <label>CVV: <input type="password" name="card_cvv"></label><br>
+    </div>
+    <button type="submit">PAY NOW</button>
+</form>
+
+<script>
+document.querySelectorAll('input[name="payment_method"]').forEach(function(el) {
+    el.addEventListener('change', function() {
+        if (this.value === 'card') {
+            document.getElementById('cardFields').style.display = 'block';
+        } else {
+            document.getElementById('cardFields').style.display = 'none';
+        }
+    });
+});
+</script>
+
+<a href="#previous-orders" class="btn btn-primary" style="margin-bottom:20px; display:inline-block;">See Your Previous Orders</a>
+
+<h2 id="previous-orders" style="margin-top:40px;">Your Previous Orders</h2>
+<table>
+    <tr>
+        <th>Order ID</th>
+        <th>Date</th>
+        <th>Products</th>
+        <th>Status</th>
+    </tr>
+    {% for order in orders %}
+    <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.order_date }}</td>
+        <td>
+            <ul>
+            {% for item in order.items.all %}
+                <li>{{ item.product.name }} x {{ item.quantity }}</li>
+            {% endfor %}
+            </ul>
+        </td>
+        <td>{{ order.status|capfirst }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

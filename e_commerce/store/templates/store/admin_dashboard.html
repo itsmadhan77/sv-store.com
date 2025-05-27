@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{% static 'store/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+        <nav>
+        </nav>
+    </header>
+    <main>
+        <!-- You can keep or remove the sections below as needed -->
+        <section>
+            <h2>Manage Users</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- User data will be populated here -->
+                </tbody>
+            </table>
+        </section>
+        <section>
+            <h2>Manage Inventory</h2>
+            <ul>
+                <li><a href="{% url 'store:admin_inventory' %}">View Inventory</a></li>
+                <li><a href="{% url 'store:add_product' %}">Add Product</a></li>
+                <li><a href="{% url 'store:admin_orders' %}">View All User Orders</a></li>
+                <li><a href="{% url 'store:admin_logout' %}">Logout</a></li>
+                <li><a href="{% url 'store:change_admin_credentials' %}">Change Admin Credentials</a></li>
+                {#<li><a href="{% url 'store:admin_orders' %}">View Orders</a></li>#}
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; E-Commerce Project , Creator - it's_madhan</p>
+    </footer>
+</body>
+</html>
